@@ -1,0 +1,313 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedy Checkout</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            margin: 0;
+            background-color: #fff;
+
+            
+        }
+        #searchbar {
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            background-color: #fff;
+            margin-top: 200px;
+            border-radius: 20%;
+            border-radius: 40px;
+            /*padding: 10px;*/
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #product-image {
+            display: none;
+            align-self: center;
+            width: 330px;
+            margin-top: 40px;
+            position: absolute; top: -1px;
+            padding-top: 40px;
+            /*background-color: #fff;*/
+            border-radius: 20%;
+            border-radius: 40px;
+            /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+            padding-left: 21px;
+            padding-right: 21px;
+            padding-bottom: 31px;
+            
+
+            
+        }
+        #product-search {
+            position: relative;
+            border-radius: 20%;
+            border-radius: 40px;
+            border: 1px solid #e2e2e2;
+            width: 331px;
+            height: 58px;
+            flex-shrink: 0;
+            color: #6F6F6F;
+            font-family: Roboto;
+            font-size: 21px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.42px;
+            padding-left: 20px;
+        }
+        #suggestions {
+            font-family: Roboto;
+            font-size: 21px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.42px;
+            color: #6F6F6F;
+            padding-left: 20px;
+            line-height: 2.5;
+            max-height: 250px;
+            width: 330px;
+            overflow-y: auto;
+            border-radius: 20%;
+            border-radius: 40px;
+            
+        }
+        
+    </style>
+</head>
+<body>
+
+
+    <div id="searchbar">
+
+
+        <input type="text" id="product-search" placeholder="Sök här.." onclick="selectAllText()">
+        <img src="" alt="Product Image" id="product-image">
+        <div id="suggestions"></div>
+    </div>
+    <script src="script.js"></script>
+
+    <script>
+        const products = [
+            //1
+            { name: "Donuts choklad", image: "images/1/1_209298880000.svg" },
+            { name: "Donuts hallon", image: "images/1/2_209297910000.svg" },
+            { name: "Donuts socker", image: "images/1/3_209298890000.svg" },
+            { name: "Donuts", image: "images/1/4_209735800000.svg" },
+            { name: "Estellefläta", image: "images/1/5_209176090000.svg" },
+            { name: "Hallon vitchoklad muffin", image: "images/1/6_209100330000.svg" },
+            { name: "Hallon och vaniljfläta", image: "images/1/7_209100390000.svg" },
+            { name: "Honey bun saffran", image: "images/1/8_209115410000.svg" },
+            { name: "Toscabulle", image: "images/1/9_209114670000.svg" },
+            { name: "Kanelknut de luxe (bulle)", image: "images/1/10_209204130000.svg" },
+            //2
+            { name: "Kanelsnäcka (bulle)", image: "images/2/1_209113750000.svg" },
+            { name: "Kardemumma smörbulle", image: "images/2/2_209199140000.svg" },
+            { name: "Bärkasse liten Nytänk", image: "images/2/3_209760310000.svg" },
+            { name: "Fruktpåse Nytänk", image: "images/2/4_209760320000.svg" },
+            { name: "Fågelmatsmugg Nytänk", image: "images/2/5_209760360000.svg" },
+            { name: "Grytlapp Nytänk", image: "images/2/6_209760380000.svg" },
+            { name: "Ljus liten Nytänk", image: "images/2/7_209760350000.svg" },
+            { name: "Ljus mellan Nytänk", image: "images/2/8_209760340000.svg" },
+            { name: "Ljus stor Nytänk", image: "images/2/9_209760330000.svg" },
+            { name: "Förkläde Nytänk", image: "images/2/10_209760390000.svg" },
+            //3
+            { name: "Papperskasse", image: "images/3/1_7330671004339.svg" },
+            { name: "Plastkasse", image: "images/3/2_7330671004322.svg" },
+            //4
+            { name: "Påsklilja i knippe", image: "images/4/1_209249990000.svg" },
+            { name: "Tändchips Nytänk", image: "images/4/2_209760370000.svg" },
+            { name: "Alundalimpa", image: "images/4/3_209113640000.svg" },
+            { name: "Baguette kort", image: "images/4/4_209297780000.svg" },
+            { name: "Baguette lång", image: "images/4/5_209297790000.svg" },
+            { name: "Balder", image: "images/4/6_209114420000.svg" },
+            { name: "Brytbröd vallmo", image: "images/4/7_209183690000.svg" },
+            { name: "Chia ciabatta 100g", image: "images/4/8_209169530000.svg" },
+            //5
+            { name: "Chia ciabatta 380g", image: "images/5/1_209178580000.svg" },
+            { name: "Ciabatta mörk", image: "images/5/2_209298090000.svg" },
+            { name: "Ciabatta naturell", image: "images/5/3_209298100000.svg" },
+            { name: "Ciabatta tranbär", image: "images/5/4_209186220000.svg" },
+            { name: "Flatbread vitlök", image: "images/5/5_209734800000.svg" },
+            { name: "Gourmet Tranbär", image: "images/5/6_209114430000.svg" },
+            { name: "Grand Levain", image: "images/5/7_209100840000.svg" },
+            { name: "Grekiskt bröd", image: "images/5/8_209113550000.svg" },
+            { name: "Grekiskt grovt bröd", image: "images/5/9_209113560000.svg" },
+            { name: "Grovt olympiabröd", image: "images/5/10_209113400000.svg" },
+            //6
+            { name: "Grovt stenugnsbröd", image: "images/6/1_209183660000.svg" },
+            { name: "Havreruta", image: "images/6/2_209181620000.svg" },
+            { name: "Italienskt bröd", image: "images/6/3_209114490000.svg" },
+            { name: "Källarfranska", image: "images/6/4_209113430000.svg" },
+            { name: "Ljust stenugnsbröd", image: "images/6/5_209183670000.svg" },
+            { name: "Långfranska", image: "images/6/6_209113480000.svg" },
+            { name: "Minibaguette", image: "images/6/7_209113340000.svg" },
+            { name: "Muslibröd", image: "images/6/8_209113590000.svg" },
+            { name: "Sportbröd", image: "images/6/9_209129610000.svg" },
+            { name: "Sportfralla", image: "images/6/10_209297620000.svg" },
+            //7
+            { name: "Stenugnsbakat bondbröd", image: "images/7/1_209158160000.svg" },
+            { name: "Tekaka", image: "images/7/2_209204110000.svg" },
+            { name: "Ungerskt bröd", image: "images/7/3_209114480000.svg" },
+            { name: "Valnöt, russin, honungsbröd 480g", image: "images/7/4_209113630000.svg" },
+            { name: "Valnöt, russin, honungsbröd 80g", image: "images/7/5_209100350000.svg" },
+            { name: "Valnötsbröd", image: "images/7/6_209129670000.svg" },
+            { name: "Vitlöksbaguette", image: "images/7/7_209297950000.svg" },
+            //8
+            { name: "Ost- och Chiaruta", image: "images/8/1_209183810000.svg" },
+            { name: "Ostfranksa", image: "images/8/2_209722080000.svg" },
+            { name: "Pezzo rustik", image: "images/8/3_209176210000.svg" },
+            { name: "Potatisbräck", image: "images/8/4_209169060000.svg" },
+            { name: "Rosenbröd", image: "images/8/5_209100300000.svg" },
+            { name: "Russinlimpa", image: "images/8/6_209113620000.svg" },
+            { name: "Rustik lantbröd tomat", image: "images/8/7_209199150000.svg" },
+            { name: "Rustik baguette 130g", image: "images/8/8_209114610000.svg" },
+            { name: "Rustik surdegslimpa", image: "images/8/9_209176200000.svg" },
+            { name: "Rustik baguette 392g", image: "images/8/10_209129560000.svg" },
+            //9
+            { name: "Rågrussinbräck", image: "images/9/1_209113440000.svg" },
+            { name: "Småfranska", image: "images/9/2_209113370000.svg" },
+            //{ name: "Kardemumma smörbulle", image: "images/9/3_209199140000.svg" },
+            { name: "Kardemummaknut de luxe (bulle)", image: "images/9/4_209104100000.svg" },
+            { name: "Kardemummalängd", image: "images/9/5_209169560000.svg" },
+            { name: "Kolalängd", image: "images/9/6_209115180000.svg" },
+            { name: "Lemon fan", image: "images/9/7_209299000000.svg" },
+            { name: "Lussekatt med saffran", image: "images/9/8_209115350000.svg" },
+            { name: "Lyxbiskbi", image: "images/9/9_209157580000.svg" },
+            { name: "Mandelcroissant", image: "images/9/10_209183460000.svg" },
+            //10
+            { name: "Maple pecan", image: "images/10/1_209129590000.svg" },
+            { name: "Nutellacroissant", image: "images/10/2_209113970000.svg" },
+            { name: "Pepparkaksmuffins", image: "images/10/3_209115290000.svg" },
+            { name: "Pistagelängd", image: "images/10/4_209113840000.svg" },
+            { name: "Pistagesnäcka (bulle)", image: "images/10/5_209113740000.svg" },
+            { name: "Saffransknut de luxe", image: "images/10/6_209179530000.svg" },
+            { name: "Saffranslängd", image: "images/10/7_209115340000.svg" },
+            { name: "Saffranssnäcka (bulle)", image: "images/10/8_209115330000.svg" },
+            { name: "Smörcroissant", image: "images/10/9_209113670000.svg" },
+            { name: "Stor punschrulle", image: "images/10/10_209129980000.svg" },
+            //11
+            { name: "Tosca Lyx", image: "images/11/1_209169620000.svg" },
+            { name: "Vaniljbulle", image: "images/11/2_209113770000.svg" },
+            { name: "Vaniljhjärtan", image: "images/11/3_209299590000.svg" },
+            { name: "Vaniljknut de luxe (bulle)", image: "images/11/4_209204120000.svg" },
+            { name: "Vaniljmuffins", image: "images/11/5_209158240000.svg" },
+            { name: "Vaniljmunk", image: "images/11/6_209296930000.svg" },
+            { name: "Sparris grön", image: "images/11/7_209245210000.svg" },
+            { name: "Sparris vit", image: "images/11/8_209245260000.svg" },
+            { name: "Zucchini", image: "images/11/9_209247890000.svg" },
+            { name: "Peppar röd (chili)", image: "images/11/10_209246970000.svg" },
+            //12
+            { name: "Jordgubbar SE 500g", image: "images/12/1_209242520000.svg" },
+            { name: "Auberginer", image: "images/12/2_209240810000.svg" },
+            { name: "Avocado", image: "images/12/3_209242270000.svg" },
+            { name: "Bakpotatis ICA", image: "images/12/4_209247290000.svg" },
+            { name: "Broccoli", image: "images/12/5_209240600000.svg" },
+            { name: "Gurka Eko", image: "images/12/6_209832540000.svg" },
+            { name: "Gurka Sverige", image: "images/12/7_209245950000.svg" },
+            { name: "Kronärtskocka", image: "images/12/8_209245200000.svg" },
+            { name: "Lök vit morado ICA (vitlök)", image: "images/12/9_209232640000.svg" },
+            { name: "Majs oskalad", image: "images/12/10_209240780000.svg" },
+            //13
+            { name: "Purjolök", image: "images/13/1_209246290000.svg" },
+            { name: "Rädisa knippe", image: "images/13/2_209240890000.svg" },
+            { name: "Ananas extra sweer", image: "images/13/3_209244330000.svg" },
+            { name: "Citro eko", image: "images/13/4_209843040000.svg" },
+            { name: "Citron ICA", image: "images/13/5_209231820000.svg" },
+            { name: "Citron", image: "images/13/6_209243040000.svg" },
+            { name: "Fikon färska", image: "images/13/7_209242660000.svg" },
+            { name: "Granatäpple", image: "images/13/8_209244460000.svg" },
+            { name: "Grape röd ICA", image: "images/13/9_209231840000.svg" },
+            { name: "Grape röd", image: "images/13/10_209242880000.svg" },
+            //14
+            { name: "Grapefrukt röd ILoveEco", image: "images/14/1_209842880000.svg" },
+            { name: "Kaki ICA", image: "images/14/2_209232150000.svg" },
+            { name: "Kiwi eko", image: "images/14/3_209840300000.svg" },
+            { name: "Kiwi gul", image: "images/14/4_209232790000.svg" },
+            { name: "Kiwi ICA", image: "images/14/5_209232060000.svg" },
+            { name: "Kiwi", image: "images/14/6_209240300000.svg" },
+            { name: "Kokosnöt", image: "images/14/7_209242600000.svg" },
+            { name: "Lime eko", image: "images/14/8_209840480000.svg" },
+            { name: "Lime", image: "images/14/9_209240480000.svg" },
+            { name: "Mango", image: "images/14/10_209243130000.svg" },
+            //15
+            { name: "Mango 2", image: "images/15/1_209249590000.svg" },
+            { name: "Passionsfrukt", image: "images/15/2_209243970000.svg" },
+            { name: "Persimon", image: "images/15/3_209244270000.svg" },
+            { name: "Pomelo", image: "images/15/4_209231290000.svg" },
+            { name: "Sharon ICA", image: "images/15/5_209231930000.svg" },
+            { name: "Sharon", image: "images/15/6_209244280000.svg" },
+            //16
+            { name: "Wienerbröd jordgubb vanilj", image: "images/16/1_209158190000.svg" },
+            { name: "Wienerbröd vanilj", image: "images/16/2_209103250000.svg" },
+            { name: "Wienerfläta äpple", image: "images/16/3_209129490000.svg" },
+            { name: "Wienerkam", image: "images/16/4_209113930000.svg" },
+            { name: "Wienerlängd", image: "images/16/5_209113690000.svg" },
+            { name: "Äppel och kanelmuffins", image: "images/16/6_209158220000.svg" },
+            { name: "Äppelkam", image: "images/16/7_209115460000.svg" },
+            { name: "Äppelmunk", image: "images/16/8_209296920000.svg" },
+            { name: "Kanellängd", image: "images/16/9_209115170000.svg" },
+            // Add more products here
+        ];
+
+        const productSearch = document.getElementById("product-search");
+        const productImage = document.getElementById("product-image");
+        const suggestions = document.getElementById("suggestions");
+
+        productSearch.addEventListener("input", () => {
+            const searchTerm = productSearch.value.trim().toLowerCase();
+            const matchedProducts = products.filter(product => product.name.toLowerCase().includes(searchTerm));
+
+            if (searchTerm === "") {
+                productImage.style.display = "none";
+                suggestions.innerHTML = "";
+            } else {
+                suggestions.innerHTML = "";
+                matchedProducts.forEach(product => {
+                    const suggestion = document.createElement("div");
+                    suggestion.innerText = product.name;
+                    suggestion.addEventListener("click", () => {
+                        productSearch.value = product.name;
+                        productImage.src = product.image;
+                        productImage.style.display = "block";
+                        suggestions.innerHTML = "";
+                    });
+                    suggestions.appendChild(suggestion);
+                });
+            }
+        }); 
+        productSearch.addEventListener("input", () => {
+        const searchTerm = productSearch.value.trim().toLowerCase();
+        const matchedProducts = products.filter(product => product.name.toLowerCase().includes(searchTerm));
+
+        if (searchTerm === "") {
+            productImage.style.display = "none"; // Hide the product image when search bar is empty
+            suggestions.innerHTML = "";
+        } else {
+            productImage.style.display = "none"; // Hide the product image when typing in the search bar
+            suggestions.innerHTML = "";
+            matchedProducts.forEach(product => {
+                const suggestion = document.createElement("div");
+                suggestion.innerText = product.name;
+                suggestion.addEventListener("click", () => {
+                    productSearch.value = product.name;
+                    productImage.src = product.image;
+                    productImage.style.display = "block";
+                    suggestions.innerHTML = "";
+                });
+                suggestions.appendChild(suggestion);
+            });
+        }
+    });
+        
+
+        
+    </script>
+</body>
+</html>
